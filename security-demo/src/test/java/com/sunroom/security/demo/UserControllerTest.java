@@ -31,15 +31,18 @@ public class UserControllerTest {
 
     @Test
     public void whenQuerySuccess() throws Exception{
-        mockMvc.perform(get("/user")
+        String result = mockMvc.perform(get("/user")
                 .param("username", "sunroom")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(3));
+                .andExpect(jsonPath("$.length()").value(3))
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println(result);
     }
     @Test
     public void whenQuerySuccess2() throws Exception{
-        mockMvc.perform(get("/user2")
+        String result = mockMvc.perform(get("/user2")
                 .param("username", "sunroom")
                 .param("age", "18")
                 .param("ageTo", "60")
@@ -49,6 +52,25 @@ public class UserControllerTest {
 //                .param("sort", "age,desc")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(3));
+                .andExpect(jsonPath("$.length()").value(3))
+        .andReturn().getResponse().getContentAsString();
+        System.out.println(result);
+    }
+
+    @Test
+    public void whenGetUserInfoSuccess() throws Exception{
+        String result = mockMvc.perform(get("/user/1")
+            .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.username").value("sunroom"))
+        .andReturn().getResponse().getContentAsString();
+        System.out.println(result);
+    }
+
+    @Test
+    public void whenGetUserInfoFail() throws Exception {
+        mockMvc.perform(get("/user/a")
+        .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(status().is4xxClientError());
     }
 }

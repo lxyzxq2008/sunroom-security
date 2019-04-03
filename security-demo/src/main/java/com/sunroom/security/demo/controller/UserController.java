@@ -1,15 +1,13 @@
 package com.sunroom.security.demo.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.sunroom.security.demo.dto.User;
 import com.sunroom.security.demo.dto.UserQueryCondition;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +16,7 @@ import java.util.List;
 public class UserController {
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
+    @JsonView(User.UserSimpleView.class)
     public List<User> query(@RequestParam(name = "username", required = false, defaultValue = "genspark") String nickname) {
         System.out.println(nickname+":=====");
         List<User> users = new ArrayList<>();
@@ -40,5 +39,18 @@ public class UserController {
         users.add(new User());
         users.add(new User());
         return users;
+    }
+
+    /**
+     * 针对{id}进行正则：
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/user/{id:\\d+}", method = RequestMethod.GET)
+    @JsonView(User.UserDetailView.class)
+    public User getInfo(@PathVariable(name = "id") String id) {
+        User user = new User();
+        user.setUsername("sunroom");
+        return user;
     }
 }
