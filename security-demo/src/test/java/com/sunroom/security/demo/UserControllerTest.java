@@ -42,7 +42,7 @@ public class UserControllerTest {
     }
     @Test
     public void whenQuerySuccess2() throws Exception{
-        String result = mockMvc.perform(get("/user2")
+        String result = mockMvc.perform(get("/user/user2")
                 .param("username", "sunroom")
                 .param("age", "18")
                 .param("ageTo", "60")

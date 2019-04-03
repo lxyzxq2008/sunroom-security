@@ -13,9 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    @GetMapping
     @JsonView(User.UserSimpleView.class)
     public List<User> query(@RequestParam(name = "username", required = false, defaultValue = "genspark") String nickname) {
         System.out.println(nickname+":=====");
@@ -26,7 +27,7 @@ public class UserController {
         return users;
     }
 
-    @RequestMapping(value = "/user2", method = RequestMethod.GET)
+    @GetMapping(value = "/user2")
     public List<User> query2(UserQueryCondition userQueryCondition, @PageableDefault(page = 2, size = 17, sort = "username,asc") Pageable pageable) {
         System.out.println(ReflectionToStringBuilder.toString(userQueryCondition, ToStringStyle.MULTI_LINE_STYLE));
 
@@ -46,7 +47,7 @@ public class UserController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/user/{id:\\d+}", method = RequestMethod.GET)
+    @GetMapping(value = "/{id:\\d+}")
     @JsonView(User.UserDetailView.class)
     public User getInfo(@PathVariable(name = "id") String id) {
         User user = new User();
