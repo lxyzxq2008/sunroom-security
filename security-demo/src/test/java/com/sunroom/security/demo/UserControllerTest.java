@@ -11,7 +11,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -72,5 +77,21 @@ public class UserControllerTest {
         mockMvc.perform(get("/user/a")
         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void whenCreateSuccess() throws Exception {
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"));
+        Long dateTime = c.getTimeInMillis();
+        String content = "{\"username\":\"sunroom\",\"password\":null,\"birthday\":"+dateTime+"}";
+        System.out.println(content);
+        String result = mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(content))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println(result);
     }
 }

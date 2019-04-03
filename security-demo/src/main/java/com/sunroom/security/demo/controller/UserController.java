@@ -7,8 +7,10 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +54,21 @@ public class UserController {
     public User getInfo(@PathVariable(name = "id") String id) {
         User user = new User();
         user.setUsername("sunroom");
+        return user;
+    }
+
+    @PostMapping
+    @JsonView(User.UserSimpleView.class)
+    public User create(@Valid @RequestBody User user, BindingResult errors) {
+//        System.out.println(ReflectionToStringBuilder.toString(user, ToStringStyle.MULTI_LINE_STYLE));
+        if (errors.hasErrors()) {
+            errors.getAllErrors().stream().forEach(error -> System.out.println(error.getDefaultMessage()));
+        }
+        System.out.println(user.getId());
+        System.out.println(user.getUsername());
+        System.out.println(user.getPassword());
+        System.out.println(user.getBirthday());
+        user.setId("1");
         return user;
     }
 }
