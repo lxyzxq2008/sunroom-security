@@ -1,8 +1,10 @@
 package com.sunroom.security.demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.sunroom.security.demo.validator.MyConstraint;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
 import java.util.Date;
 
 public class User {
@@ -16,14 +18,16 @@ public class User {
     public interface UserSimpleView {};
     public interface UserDetailView extends UserSimpleView {};
 
+    @MyConstraint(message = "这是一个测试")
     private String username;
-    @NotBlank
+    @NotBlank(message = "密码不能为空")
     private String password;
     private String id;
     /**
      * 在前后端分离的架构中，时间传递时按照时间戳来进行传递
      * 前台和后台最终想要的格式，有前后台自己进行转换处理
      */
+    @Past(message = "生日必须是过去时间")
     private Date birthday;
 
     @JsonView(UserSimpleView.class)
