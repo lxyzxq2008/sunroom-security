@@ -3,6 +3,7 @@ package com.sunroom.security.demo.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.sunroom.security.demo.dto.User;
 import com.sunroom.security.demo.dto.UserQueryCondition;
+import com.sunroom.security.demo.exception.UserNotExistException;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.propertyeditors.FileEditor;
@@ -55,18 +56,15 @@ public class UserController {
     @GetMapping(value = "/{id:\\d+}")
     @JsonView(User.UserDetailView.class)
     public User getInfo(@PathVariable(name = "id") String id) {
-        User user = new User();
-        user.setUsername("sunroom");
-        return user;
+        throw new UserNotExistException(id);
+//        User user = new User();
+//        user.setUsername("sunroom");
+//        return user;
     }
 
     @PostMapping
     @JsonView(User.UserSimpleView.class)
-    public User create(@Valid @RequestBody User user, BindingResult errors) {
-//        System.out.println(ReflectionToStringBuilder.toString(user, ToStringStyle.MULTI_LINE_STYLE));
-        if (errors.hasErrors()) {
-            errors.getAllErrors().stream().forEach(error -> System.out.println(error.getDefaultMessage()));
-        }
+    public User create(@Valid @RequestBody User user) {
         System.out.println(user.getId());
         System.out.println(user.getUsername());
         System.out.println(user.getPassword());
